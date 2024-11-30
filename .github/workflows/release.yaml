@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest  # This job will run on the latest Ubuntu
+    permissions:
+      contents: write
 
     strategy:
       matrix:
@@ -40,26 +42,8 @@ jobs:
         run: |
           pyinstaller --onefile --name "BrotatoWorkshopDownloader-${{ matrix.os }}" --windowed run.py
 
-      # Upload the build artifacts
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: BrotatoWorkshopDownloader-build-${{ matrix.os }}
-          path: dist/BrotatoWorkshopDownloader*  # Ensure we upload the correct executable
-
-  release:
-    needs: build  # Ensure the build job is completed before release
-    runs-on: ubuntu-latest  # The release will run on Ubuntu (can also use windows-latest if needed)
-    permissions:
-      contents: write
-
-    steps:
-      # Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       # Create GitHub Release
-      - name: Create GitHub Release
+      - name: Update GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
