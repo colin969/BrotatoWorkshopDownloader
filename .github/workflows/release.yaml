@@ -50,6 +50,8 @@ jobs:
   release:
     needs: build  # Ensure the build job is completed before release
     runs-on: ubuntu-latest  # The release will run on Ubuntu (can also use windows-latest if needed)
+    permissions:
+      contents: write
 
     steps:
       # Checkout the repository
@@ -59,8 +61,6 @@ jobs:
       # Create GitHub Release
       - name: Create GitHub Release
         id: create_release
-        permissions:
-          contents: write
         uses: softprops/action-gh-release@v2
         with:
           files: dist/BrotatoWorkshopDownloader*  # Upload the built "BrotatoWorkshopDownloader" executables
