@@ -38,13 +38,13 @@ jobs:
       # Build the executable using PyInstaller with a custom name
       - name: Build Executable with PyInstaller
         run: |
-          pyinstaller --onefile --name "BrotatoWorkshopDownloader" --windowed run.py
+          pyinstaller --onefile --name "BrotatoWorkshopDownloader-${{ matrix.os }}" --windowed run.py
 
       # Upload the build artifacts
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: BrotatoWorkshopDownloader-build
+          name: BrotatoWorkshopDownloader-build-${{ matrix.os }}
           path: dist/BrotatoWorkshopDownloader*  # Ensure we upload the correct executable
 
   release:
