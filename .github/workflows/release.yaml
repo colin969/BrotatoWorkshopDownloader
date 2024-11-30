@@ -16,7 +16,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Set up Python
       - name: Set up Python
@@ -42,7 +42,7 @@ jobs:
 
       # Upload the build artifacts
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: BrotatoWorkshopDownloader-build
           path: dist/BrotatoWorkshopDownloader*  # Ensure we upload the correct executable
@@ -54,12 +54,12 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Create GitHub Release
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: dist/BrotatoWorkshopDownloader*  # Upload the built "BrotatoWorkshopDownloader" executables
         env:
