@@ -1,0 +1,67 @@
+name: Build and Release BrotatoWorkshopDownloader Executable
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # This job will run on the latest Ubuntu
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]  # Matrix for building on different platforms
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'  # You can change the Python version if needed
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Install PyInstaller
+      - name: Install PyInstaller
+        run: |
+          pip install pyinstaller
+
+      # Build the executable using PyInstaller with a custom name
+      - name: Build Executable with PyInstaller
+        run: |
+          pyinstaller --onefile --name "BrotatoWorkshopDownloader" --windowed run.py
+
+      # Upload the build artifacts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: BrotatoWorkshopDownloader-build
+          path: dist/BrotatoWorkshopDownloader*  # Ensure we upload the correct executable
+
+  release:
+    needs: build  # Ensure the build job is completed before release
+    runs-on: ubuntu-latest  # The release will run on Ubuntu (can also use windows-latest if needed)
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Create GitHub Release
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/BrotatoWorkshopDownloader*  # Upload the built "BrotatoWorkshopDownloader" executables
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub token is automatically provided by GitHub Actions
+
